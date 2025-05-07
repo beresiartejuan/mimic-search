@@ -65,7 +65,7 @@ const FeedList: React.FC = () => {
   }
 
   return (
-    <div className="mt-16 w-full max-w-lg">
+    <div className="mt-16 w-full">
       <h2 className="text-white text-xl mb-4 font-semibold">Feeds</h2>
       <div className="grid gap-4">
         {feedItems.map((item, index) => (

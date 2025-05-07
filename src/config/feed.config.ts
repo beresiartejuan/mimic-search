@@ -12,6 +12,8 @@ export type FeedProcessor = (url: string) => Promise<FeedItem[] | undefined>;
 
 export const feeds = ["https://dev.to/feed"];
 
+const LIMIT_STRING_LEGTH = 300;
+
 /**
  * Limipiar html
  */
@@ -64,7 +66,7 @@ export const parseDevToFeed: FeedProcessor = async (url) => {
       const title = item.querySelector("title")?.textContent?.trim() || "";
       const descriptionRaw =
         item.querySelector("description")?.textContent || "";
-      let description = sanitize(descriptionRaw).slice(0, 280); // preview corto
+      let description = sanitize(descriptionRaw).slice(0, LIMIT_STRING_LEGTH); // preview corto
       if (descriptionRaw.length > 280) description += "...";
       const link = item.querySelector("link").textContent || "";
 

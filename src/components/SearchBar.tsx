@@ -53,7 +53,7 @@ const SearchBar: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSearch} className="w-full max-w-lg">
+    <form onSubmit={handleSearch} className="w-full">
       <div className="relative">
         <Input
           type="text"
