@@ -28,7 +28,13 @@ function sanitize(html) {
 export const parseDevToFeed: FeedProcessor = async (url) => {
   if (url !== feeds[0]) return undefined;
 
-  const fav_categories = ["javascript", "productivity", "webdev", "typescript"];
+  const fav_categories = [
+    "javascript",
+    "productivity",
+    "webdev",
+    "typescript",
+    "programming",
+  ];
   const icon = "https://dev.to/favicon.ico"; // ícono fijo o configurable
 
   try {
@@ -60,7 +66,7 @@ export const parseDevToFeed: FeedProcessor = async (url) => {
         item.querySelector("description")?.textContent || "";
       let description = sanitize(descriptionRaw).slice(0, 280); // preview corto
       if (descriptionRaw.length > 280) description += "...";
-      const link = item.querySelector("link").textContent.trim() || "";
+      const link = item.querySelector("link").textContent || "";
 
       return {
         title,
