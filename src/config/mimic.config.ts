@@ -57,7 +57,7 @@ async function parseDevToFeed(url: string): Promise<FeedItem[] | undefined> {
   try {
     if(!url.includes("https://dev.to")) return undefined;
 
-    const fav_categories = [];
+    const fav_categories = ["javascript", "productivity", "webdev"];
     
     const res = await fetch(url);
     const text = await res.text();
