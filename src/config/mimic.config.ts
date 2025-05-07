@@ -1,6 +1,14 @@
 
 // Mimic Search Configuration
 
+export type FeedItem = {
+  title: string;
+  description: string;
+  icon: string;
+};
+
+export type FeedProcessor = (url: string) => FeedItem[] | undefined;
+
 export type SearchEngine = {
   name: string;
   icon: string;
@@ -37,6 +45,12 @@ export type MimicConfig = {
     logoText: string | null;
     // Add any additional UI configuration options here
   };
+
+  // RSS Feeds URLs
+  feeds: string[];
+  
+  // Feed Processor functions
+  feedProcessors: FeedProcessor[];
 };
 
 const config: MimicConfig = {
@@ -87,6 +101,8 @@ const config: MimicConfig = {
     logoUrl: "/lovable-uploads/8eb3df7e-01fd-4e45-bc5d-2269261ad1b2.png",
     logoText: "MIMIC.",
   },
+  feeds: ["https://www.infobae.com/feeds/rss"],
+  feedProcessors: [],
 };
 
 export default config;
