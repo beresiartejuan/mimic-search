@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Rss, ExternalLink } from "lucide-react";
 import config from "@/config/mimic.config";
 import type { FeedItem } from "@/config/feed.config";
+import { getCachedFeed, setCachedFeed } from "@/store/feed.store";
 
 const FeedList: React.FC = () => {
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
@@ -20,7 +21,15 @@ const FeedList: React.FC = () => {
         // Intentar procesar con cada procesador disponible
         for (const processor of config.feedProcessors) {
           try {
-            const result = await processor(feedUrl);
+            let result: FeedItem[] | undefined;
+            const cached_result = await getCachedFeed(feedUrl);
+
+            if(!cached_result){
+              result = await processor(feedUrl);
+              setCachedFeed(feedUrl, result);
+            }else{
+              result = cached_result;
+            }
             
             // Si este procesador pudo manejar el feed, agregar los items al resultado
             if (result && Array.isArray(result) && result.length > 0) {
