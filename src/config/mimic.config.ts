@@ -56,14 +56,26 @@ export type MimicConfig = {
 async function parseDevToFeed(url: string): Promise<FeedItem[] | undefined> {
   try {
     if(!url.includes("https://dev.to")) return undefined;
+
+    const fav_categories = [];
     
     const res = await fetch(url);
     const text = await res.text();
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, "application/xml");
 
-    const all_items = xml.querySelectorAll("item");
-    const items = Array.from(all_items);
+    const all_items = Array.from(xml.querySelectorAll("item"));
+    const items = all_items.map(a => {
+      const categories = Array.from(a.querySelectorAll("category")).map(cat =>
+        cat.textContent?.trim().toLowerCase()
+      );
+
+      if(categories.length === 0) return null;
+      if(!categories.some(cat => fav_categories.includes(cat))) return null;
+
+      return a;
+    }).filter(Boolean);
+    
     const icon = "https://dev.to/favicon.ico"; // ícono fijo o configurable
 
     const articles = items.map((item) => {
