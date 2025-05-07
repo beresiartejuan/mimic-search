@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Rss } from "lucide-react";
+import { Rss, ExternalLink } from "lucide-react";
 import config from "@/config/mimic.config";
 import type { FeedItem } from "@/config/mimic.config";
 
@@ -56,23 +56,33 @@ const FeedList: React.FC = () => {
   }
 
   return (
-    <div className="mt-8 w-full max-w-lg">
+    <div className="mt-16 w-full max-w-lg">
       <h2 className="text-white text-xl mb-4 font-semibold">Feeds</h2>
       <div className="grid gap-4">
         {feedItems.map((item, index) => (
           <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 text-white">
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
-                {item.icon ? (
-                  <img src={item.icon} alt="icon" className="h-5 w-5" />
-                ) : (
-                  <Rss className="h-5 w-5 text-white" />
-                )}
-                <CardTitle className="text-lg">{item.title}</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  {item.icon ? (
+                    <img src={item.icon} alt="icon" className="h-5 w-5" />
+                  ) : (
+                    <Rss className="h-5 w-5 text-white" />
+                  )}
+                  {item.title}
+                </CardTitle>
               </div>
             </CardHeader>
             <CardContent>
               <CardDescription className="text-white/70">{item.description}</CardDescription>
+              <a 
+                href="#" 
+                className="text-accent flex items-center gap-1 mt-2 hover:text-accent/80 transition-colors"
+                onClick={(e) => e.preventDefault()}
+              >
+                <span>Leer más</span>
+                <ExternalLink className="h-4 w-4" />
+              </a>
             </CardContent>
           </Card>
         ))}

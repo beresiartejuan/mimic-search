@@ -32,9 +32,15 @@ const getIcon = (iconName: string) => {
 };
 
 const SocialIcons: React.FC = () => {
+  // Filtrar para excluir el botón de DuckDuckGo
+  const filteredLinks = config.socialLinks.filter(link => 
+    !link.name.toLowerCase().includes("duck") && 
+    !link.url.includes("duckduckgo.com")
+  );
+
   return (
     <div className="flex space-x-4 mt-8">
-      {config.socialLinks.map((link, index) => (
+      {filteredLinks.map((link, index) => (
         <Button
           key={index}
           variant="ghost"
