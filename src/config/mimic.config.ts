@@ -53,6 +53,45 @@ export type MimicConfig = {
   feedProcessors: FeedProcessor[];
 };
 
+async function parseDevToFeed(url: string): FeedItem[] | undefined {
+  try {
+    if(!url.includes("https://dev.to")) return undefined;
+    
+    const res = await fetch(url);
+    const text = await res.text();
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(text, "application/xml");
+
+    const items = Array.from(xml.querySelectorAll("item"));
+    const icon = "https://dev.to/favicon.ico"; // ícono fijo o configurable
+
+    const articles = items.map((item) => {
+      const title = item.querySelector("title")?.textContent?.trim() || "";
+      const descriptionRaw = item.querySelector("description")?.textContent || "";
+      const description = stripHtml(descriptionRaw).slice(0, 280); // preview corto
+
+      return {
+        title,
+        description,
+        icon
+      };
+    });
+
+    return articles.length ? articles : undefined;
+
+  } catch (err) {
+    console.error("Error procesando el feed:", err);
+    return undefined;
+  }
+}
+
+// Utilidad opcional para limpiar HTML
+function stripHtml(html) {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+}
+
 const config: MimicConfig = {
   title: "MIMIC Search",
   defaultSearchEngine: "google",
@@ -101,8 +140,8 @@ const config: MimicConfig = {
     logoUrl: "/lovable-uploads/8eb3df7e-01fd-4e45-bc5d-2269261ad1b2.png",
     logoText: "MIMIC.",
   },
-  feeds: ["https://www.infobae.com/feeds/rss"],
-  feedProcessors: [],
+  feeds: ["https://www.infobae.com/feeds/rss", "https://dev.to/feed/"],
+  feedProcessors: [parseDevToFeed],
 };
 
 export default config;
