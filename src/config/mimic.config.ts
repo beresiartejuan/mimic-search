@@ -77,7 +77,7 @@ async function parseDevToFeed(url: string): Promise<FeedItem[] | undefined> {
       };
     });
 
-    return articles.length ? articles.slice(4) : undefined;
+    return articles.length ? articles.slice(0, 4) : undefined;
 
   } catch (err) {
     console.error("Error procesando el feed:", err);
