@@ -1,73 +1,178 @@
-# Welcome to your Lovable project
+# MIMIC
 
-## Project info
+A customizable search landing page that displays relevant news from RSS feeds. MIMIC allows you to quickly search the web while keeping up with your favorite content sources.
 
-**URL**: https://lovable.dev/projects/3c2530ea-14d1-4038-a8ed-d57f6b56dee0
+![MIMIC Search Screenshot](/captura.png)
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Customizable Search Engine** - Choose your preferred search engine or add your own
+- **RSS Feed Integration** - Display the latest articles from your favorite websites
+- **Local Caching** - Saves feed data to localStorage to improve performance
+- **Responsive Design** - Works on all devices
+- **Easy Configuration** - Simple configuration files to personalize your experience
 
-**Use Lovable**
+## Getting Started
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3c2530ea-14d1-4038-a8ed-d57f6b56dee0) and start prompting.
+### Prerequisites
 
-Changes made via Lovable will be committed automatically to this repo.
+- Node.js (v14 or newer)
+- npm or yarn
 
-**Use your preferred IDE**
+### Installation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Clone the repository:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+   ```bash
+   git clone https://github.com/beresiartejuan/mimic-search.git
+   cd mimic
+   ```
 
-Follow these steps:
+2. Install dependencies:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+   ```bash
+   npm install
+   # or
+   yarn
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. Run the development server:
 
-# Step 3: Install the necessary dependencies.
-npm i
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+4. Open [http://localhost:8080](http://localhost:8080) in your browser
+
+## Configuration
+
+MIMIC is designed to be easily customizable. All configuration files are located in the `config` directory.
+
+### Search Engines
+
+Edit `search-engine.config.ts` to customize your search engines:
+
+```typescript
+export const searchEngines: SearchEngine[] = [
+  {
+    name: "Google",
+    icon: "chrome",
+    url: "https://www.google.com/search?q=[Q]",
+  },
+  {
+    name: "DuckDuckGo",
+    icon: "duck",
+    url: "https://duckduckgo.com/?q=[Q]",
+  },
+  // Add your own search engines here
+];
 ```
 
-**Edit a file directly in GitHub**
+The `[Q]` placeholder in the URL will be replaced with your search query.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### RSS Feeds
 
-**Use GitHub Codespaces**
+Configure your RSS feeds in `feed.config.ts`:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```typescript
+export const feeds = [
+  "https://dev.to/feed",
+  // Add your own RSS feed URLs here
+];
+```
 
-## What technologies are used for this project?
+### Feed Processors
 
-This project is built with:
+MIMIC uses feed processors to parse different types of RSS feeds. The default processor (`parseDevToFeed`) is configured to parse feeds from dev.to and filter articles by category.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+To customize the categories you're interested in, edit the `fav_categories` array in `feed.config.ts`:
 
-## How can I deploy this project?
+```typescript
+const fav_categories = [
+  "javascript",
+  "productivity",
+  "webdev",
+  "typescript",
+  "programming",
+  // Add your preferred categories here
+];
+```
 
-Simply open [Lovable](https://lovable.dev/projects/3c2530ea-14d1-4038-a8ed-d57f6b56dee0) and click on Share -> Publish.
+### Social Links
 
-## Can I connect a custom domain to my Lovable project?
+Edit `social.config.ts` to customize the quick links displayed below the search bar:
 
-Yes, you can!
+```typescript
+export const socialLinks: SocialLink[] = [
+  {
+    name: "Chrome",
+    url: "https://www.google.com",
+    icon: "chrome",
+  },
+  // Add your frequently visited sites here
+];
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### App Configuration
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+The main configuration file `mimic.config.ts` combines all the other configurations:
+
+```typescript
+const config: MimicConfig = {
+  title: "MIMIC Search", // Browser tab title
+  defaultSearchEngine: "google", // Default search engine
+  searchEngines, // From search-engine.config.ts
+  socialLinks, // From social.config.ts
+  ui: {
+    logoUrl: "/logo.png", // Path to your logo
+    logoText: "MIMIC.", // Text displayed next to the logo
+  },
+  feeds, // From feed.config.ts
+  feedProcessors: [parseDevToFeed], // Feed processors
+};
+```
+
+## Creating Custom Feed Processors
+
+To add support for different RSS feed formats, you can create custom feed processors in `feed.config.ts`. A feed processor is a function that takes a feed URL and returns an array of feed items.
+
+Example:
+
+```typescript
+export const parseCustomFeed: FeedProcessor = async (url) => {
+  if (url !== "https://example.com/feed") return undefined;
+
+  try {
+    // Fetch and parse the feed
+    const res = await fetch(url);
+    const text = await res.text();
+    // Process the feed data
+    // ...
+
+    return feedItems;
+  } catch (error) {
+    console.error("Error processing the feed:", error);
+    return undefined;
+  }
+};
+
+// Add your processor to the processors array in mimic.config.ts
+feedProcessors: [parseDevToFeed, parseCustomFeed],
+```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Design inspired by modern search interfaces
+- Built with React and Tailwind CSS
+- Uses shadcn/ui components
+- Develop with Lovable
+
+---
+
+Feel free to customize MIMIC to your liking! If you encounter any issues or have suggestions, please open an issue on GitHub.
