@@ -2,7 +2,7 @@
 
 A customizable search landing page that displays relevant news from RSS feeds. MIMIC allows you to quickly search the web while keeping up with your favorite content sources.
 
-![MIMIC Search Screenshot](/captura.png)
+![MIMIC Search Screenshot](captura.png)
 
 ## Features
 
