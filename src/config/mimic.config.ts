@@ -7,7 +7,7 @@ export type FeedItem = {
   icon: string;
 };
 
-export type FeedProcessor = (url: string) => FeedItem[] | undefined;
+export type FeedProcessor = (url: string) => Promise<FeedItem[] | undefined>;
 
 export type SearchEngine = {
   name: string;
@@ -53,7 +53,7 @@ export type MimicConfig = {
   feedProcessors: FeedProcessor[];
 };
 
-async function parseDevToFeed(url: string): FeedItem[] | undefined {
+async function parseDevToFeed(url: string): Promise<FeedItem[] | undefined> {
   try {
     if(!url.includes("https://dev.to")) return undefined;
     

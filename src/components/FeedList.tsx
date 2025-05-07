@@ -7,31 +7,48 @@ import type { FeedItem } from "@/config/mimic.config";
 
 const FeedList: React.FC = () => {
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Procesar todos los feeds a través de los processors
-    const processFeeds = () => {
+    // Procesar todos los feeds a través de los processors de forma asíncrona
+    const processFeeds = async () => {
+      setIsLoading(true);
       const processedItems: FeedItem[] = [];
       
       // Para cada URL de feed
-      config.feeds.forEach(feedUrl => {
+      for (const feedUrl of config.feeds) {
         // Intentar procesar con cada procesador disponible
         for (const processor of config.feedProcessors) {
-          const result = processor(feedUrl);
-          
-          // Si este procesador pudo manejar el feed, agregar los items al resultado
-          if (result && Array.isArray(result) && result.length > 0) {
-            processedItems.push(...result);
-            break; // Continuar con el siguiente feed una vez que uno ha tenido éxito
+          try {
+            const result = await processor(feedUrl);
+            
+            // Si este procesador pudo manejar el feed, agregar los items al resultado
+            if (result && Array.isArray(result) && result.length > 0) {
+              processedItems.push(...result);
+              break; // Continuar con el siguiente feed una vez que uno ha tenido éxito
+            }
+          } catch (error) {
+            console.error(`Error al procesar feed ${feedUrl}:`, error);
+            // Continuar con el siguiente procesador incluso si este falló
           }
         }
-      });
+      }
       
       setFeedItems(processedItems);
+      setIsLoading(false);
     };
     
     processFeeds();
   }, []); // Solo se ejecuta una vez al montar el componente
+
+  // Si está cargando, mostrar un indicador de carga
+  if (isLoading && config.feedProcessors.length > 0) {
+    return (
+      <div className="mt-8 w-full max-w-lg">
+        <h2 className="text-white text-xl mb-4 font-semibold">Cargando feeds...</h2>
+      </div>
+    );
+  }
 
   // Si no hay items de feed o no hay procesadores configurados, no renderizar nada
   if (feedItems.length === 0) {
