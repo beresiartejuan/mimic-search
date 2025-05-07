@@ -62,7 +62,8 @@ async function parseDevToFeed(url: string): Promise<FeedItem[] | undefined> {
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, "application/xml");
 
-    const items = Array.from(xml.querySelectorAll("item"));
+    const all_items = xml.querySelectorAll("item");
+    const items = Array.from(all_items);
     const icon = "https://dev.to/favicon.ico"; // ícono fijo o configurable
 
     const articles = items.map((item) => {
