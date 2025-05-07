@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Rss, ExternalLink } from "lucide-react";
 import config from "@/config/mimic.config";
-import type { FeedItem } from "@/config/mimic.config";
+import type { FeedItem } from "@/config/feed.config";
 
 const FeedList: React.FC = () => {
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
@@ -76,9 +76,9 @@ const FeedList: React.FC = () => {
             <CardContent>
               <CardDescription className="text-white/70">{item.description}</CardDescription>
               <a 
-                href="#" 
+                href={item.link}
+                target="_blank" 
                 className="text-accent flex items-center gap-1 mt-2 hover:text-accent/80 transition-colors"
-                onClick={(e) => e.preventDefault()}
               >
                 <span>Leer más</span>
                 <ExternalLink className="h-4 w-4" />

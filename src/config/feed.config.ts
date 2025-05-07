@@ -5,6 +5,7 @@ export type FeedItem = {
   title: string;
   description: string;
   icon: string;
+  link: string;
 };
 
 export type FeedProcessor = (url: string) => Promise<FeedItem[] | undefined>;
@@ -59,11 +60,13 @@ export const parseDevToFeed: FeedProcessor = async (url) => {
         item.querySelector("description")?.textContent || "";
       let description = sanitize(descriptionRaw).slice(0, 280); // preview corto
       if (descriptionRaw.length > 280) description += "...";
+      const link = item.querySelector("link").textContent.trim() || "";
 
       return {
         title,
         description,
         icon,
+        link,
       };
     });
 
