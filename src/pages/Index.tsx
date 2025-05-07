@@ -15,7 +15,7 @@ const Index: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-lg flex flex-col items-center">
+      <div className="w-full max-w-lg flex flex-col items-center mt-[15vh]">
         <Logo className="mb-8" />
         <SearchBar />
         <SocialIcons />
