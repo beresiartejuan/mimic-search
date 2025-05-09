@@ -11,9 +11,14 @@ export const socialLinks: SocialLink[] = [
     icon: "chrome",
   },
   {
-    name: "DuckDuckGo",
-    url: "https://duckduckgo.com",
-    icon: "duck",
+    name: "Gmail",
+    url: "https://mail.google.com/",
+    icon: "gmail"
+  },
+  {
+    name: "Github",
+    url: "https://github.com/",
+    icon: "github"
   },
   {
     name: "YouTube",
